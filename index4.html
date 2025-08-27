@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso Interactivo de Liderazgo: Plan Maestro para el Liderazgo Moderno</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --primary-color: #4a90e2;
+            --secondary-color: #2c2c2c;
+            --header-color: #222;
+            --accent-color: #50fa7b;
+            --error-color: #ff5555;
+            --border-color: #444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+        }
+
+        #sidebar {
+            width: 280px;
+            background-color: var(--header-color);
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+            box-sizing: border-box;
+        }
+
+        #sidebar h1 {
+            font-size: 1.5em;
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        #sidebar nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #sidebar nav ul li {
+            margin: 15px 0;
+        }
+        
+        #sidebar nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9em;
+            display: block;
+            padding: 8px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s, opacity 0.3s;
+        }
+
+        #sidebar nav ul li a.active, #sidebar nav ul li a:not(.locked):hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        #sidebar nav ul li a.locked {
+            color: #777;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        #sidebar nav ul.sub-menu {
+            padding-left: 20px;
+            font-size: 0.95em;
+        }
+
+        #main-content {
+            margin-left: 280px;
+            padding: 40px;
+            width: calc(100% - 280px);
+            box-sizing: border-box;
+        }
+
+       .content-section {
+            display: none;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+       .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--primary-color);
+        }
+        
+        h1 { font-size: 2.8em; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 20px; }
+        h2 { font-size: 2.2em; margin-top: 40px; }
+        h3 { font-size: 1.8em; margin-top: 30px; }
+        h4 { font-size: 1.4em; color: var(--accent-color); margin-top: 25px; }
+
+        p, li {
+            font-size: 1.1em;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            background-color: var(--secondary-color);
+            padding: 15px 20px;
+            border-radius: 5px;
+        }
+        
+        .quiz-container {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+       .quiz-question {
+            margin-bottom: 15px;
+        }
+
+       .quiz-question p {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+       .quiz-options label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .quiz-options label:hover {
+            background-color: #3a3a3a;
+        }
+        
+       .quiz-feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            padding: 8px;
+            border-radius: 4px;
+            display: none;
+        }
+       .quiz-feedback.correct { 
+            color: var(--accent-color); 
+            background-color: rgba(80, 250, 123, 0.1);
+            display: block;
+        }
+       .quiz-feedback.incorrect { 
+            color: var(--error-color); 
+            background-color: rgba(255, 85, 85, 0.1);
+            display: block;
+        }
+        
+        .quiz-container button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .quiz-container button:hover {
+            background-color: #3a7ac2;
+        }
+        
+        #progress-bar-container {
+            width: calc(100% - 280px);
+            background-color: var(--secondary-color);
+            height: 12px; /* Aumentado */
+            position: fixed;
+            top: 0;
+            left: 280px;
+            z-index: 1000;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); /* Añadido */
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-image: linear-gradient(45deg, var(--primary-color), #6aa9f2); /* Añadido */
+            transition: width 0.4s ease-in-out;
+            border-radius: 0 5px 5px 0;
+        }
+        
+       .case-study {
+            background-color: #252525;
+            border: 1px solid #3a3a3a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+       .case-study h4 {
+            margin-top: 0;
+        }
+
+        /* Final Quiz Styles */
+        #final-quiz-container {
+            background-color: var(--secondary-color);
+            padding: 30px;
+            border-radius: 10px;
+        }
+        #question-container {
+            margin-bottom: 20px;
+        }
+        #final-quiz-container button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        #final-quiz-container button:hover {
+            background-color: #3a7ac2;
+        }
+        #results-container {
+            display: none;
+        }
+       .result-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+       .result-item.correct {
+            background-color: rgba(80, 250, 123, 0.1);
+            border: 1px solid var(--accent-color);
+        }
+       .result-item.incorrect {
+            background-color: rgba(255, 85, 85, 0.1);
+            border: 1px solid var(--error-color);
+        }
+       .result-item p {
+            margin: 5px 0;
+        }
+       .explanation {
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 0.95em;
+            color: #ccc;
+        }
+        
+        #final-quiz-progress-container {
+            width: 100%;
+            background-color: var(--secondary-color);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        #final-quiz-progress-bar {
+            width: 0%;
+            height: 12px;
+            background-color: var(--accent-color);
+            transition: width 0.4s ease;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <div id="sidebar">
+        <h1>Plan Maestro para el Liderazgo Moderno</h1>
+        <nav>
+            <ul id="nav-menu">
+                <li><a href="#part1" class="nav-link-header">Parte I: Fundamentos</a>
+                    <ul class="sub-menu">
+                        <li><a href="#section1" class="nav-link" data-section-id="section1">1. Definición Evolutiva</a></li>
+                        <li><a href="#section2" class="nav-link" data-section-id="section2">2. Modelos Fundamentales</a></li>
+                    </ul>
+                </li>
+                <li><a href="#part2" class="nav-link-header">Parte II: Arsenal Interno</a>
+                    <ul class="sub-menu">
+                        <li><a href="#section3" class="nav-link" data-section-id="section3">3. Inteligencia Emocional</a></li>
+                        <li><a href="#section4" class="nav-link" data-section-id="section4">4. Alineación Estratégica</a></li>
+                    </ul>
+                </li>
+                <li><a href="#part3" class="nav-link-header">Parte III: Panorama Contemporáneo</a>
+                     <ul class="sub-menu">
+                        <li><a href="#section5" class="nav-link" data-section-id="section5">5. Liderazgo en la Era IA</a></li>
+                        <li><a href="#section6" class="nav-link" data-section-id="section6">6. El Líder Sostenible (ESG)</a></li>
+                        <li><a href="#section7" class="nav-link" data-section-id="section7">7. El Líder Inclusivo</a></li>
+                    </ul>
+                </li>
+                <li><a href="#part4" class="nav-link-header">Parte IV: Liderazgo en Acción</a>
+                     <ul class="sub-menu">
+                        <li><a href="#section8" class="nav-link" data-section-id="section8">8. Contexto Peruano</a></li>
+                        <li><a href="#section9" class="nav-link" data-section-id="section9">9. Historias Inspiradoras</a></li>
+                    </ul>
+                </li>
+                <li><a href="#final-quiz" class="nav-link" data-section-id="final-quiz">Cuestionario Final</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div id="main-content">
+        
+        <div id="section1" class="content-section">
+            <h2>Parte I: Los Fundamentos del Liderazgo Efectivo</h2>
+            <h3>Sección 1: La Definición Evolutiva de un Líder</h3>
+            <p>El concepto de liderazgo ha experimentado una profunda transformación. Lejos de ser una posición de autoridad inmutable, el liderazgo en el siglo XXI es un fenómeno complejo y multifacético que exige una comprensión matizada de la psicología humana, la dinámica contextual y la inteligencia emocional. La investigación académica y la práctica empresarial convergen en una nueva visión del líder como un facilitador del potencial colectivo, más que un mero director de tareas.</p>
+            
+            <h4>De Mandar y Controlar a Conectar y Colaborar</h4>
+            <p>Históricamente, las teorías de liderazgo se centraban en las cualidades innatas del individuo. Sin embargo, el paradigma contemporáneo ha girado decisivamente. La investigación más reciente se aleja del enfoque en la "figura del líder" para centrarse en el liderazgo como un fenómeno dinámico, relacional y compartido. El rol del líder moderno no es simplemente dar órdenes, sino crear las condiciones para que el liderazgo emerja de otros.</p>
+
+            <h4>La Tríada Líder-Seguidor-Contexto</h4>
+            <p>Un pilar fundamental para comprender el liderazgo moderno es el reconocimiento de que no es un acto solitario, sino una interacción compleja entre tres elementos: el líder, los seguidores y el contexto. Este marco subraya que la eficacia de un líder no puede evaluarse de forma aislada. Un estilo de liderazgo que funciona en una situación de crisis puede ser contraproducente en un entorno estable.</p>
+
+            <h4>El Núcleo Emocional del Liderazgo</h4>
+            <p>La visión del líder como una figura puramente racional ha quedado obsoleta. La investigación contemporánea reconoce el liderazgo como un "proceso cargado de emociones". La inteligencia emocional ya no se considera una "habilidad blanda" opcional, sino una competencia funcional central para el liderazgo efectivo. La capacidad de un líder para percibir, comprender y gestionar sus propias emociones y las de los demás es fundamental para construir confianza e inspirar motivación.</p>
+            
+            <div class="quiz-container">
+                <h4>Autoevaluación: Sección 1</h4>
+                <div class="quiz-question" id="q1-1"><p>1. ¿Cuál es el cambio principal en la concepción moderna del liderazgo?</p><div class="quiz-options"><label><input type="radio" name="q1-1" value="a"> De un enfoque en rasgos innatos a un enfoque en el control estricto.</label><label><input type="radio" name="q1-1" value="b"> De un modelo de mando y control a uno de conexión y colaboración.</label><label><input type="radio" name="q1-1" value="c"> De un enfoque colaborativo a uno basado en la autoridad jerárquica.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q1-2"><p>2. La "Tríada del Liderazgo" se compone de:</p><div class="quiz-options"><label><input type="radio" name="q1-2" value="a"> Líder, Tarea y Resultado.</label><label><input type="radio" name="q1-2" value="b"> Visión, Misión y Valores.</label><label><input type="radio" name="q1-2" value="c"> Líder, Seguidor y Contexto.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q1-3"><p>3. ¿Qué competencia se considera hoy fundamental y no opcional para un líder?</p><div class="quiz-options"><label><input type="radio" name="q1-3" value="a"> Habilidades técnicas de programación.</label><label><input type="radio" name="q1-3" value="b"> Inteligencia Emocional.</label><label><input type="radio" name="q1-3" value="c"> Dominio de las finanzas.</label></div><div class="quiz-feedback"></div></div>
+                <button class="verify-btn" data-section="section1">Verificar y Continuar</button>
+            </div>
+        </div>
+
+        <div id="section2" class="content-section">
+            <h3>Sección 2: Un Compendio de Modelos Fundamentales de Liderazgo</h3>
+            <p>Para construir una práctica de liderazgo sólida, es esencial dominar un conjunto de modelos fundamentales que han resistido la prueba del tiempo. Estos marcos teóricos son herramientas de diagnóstico y acción.</p>
+
+            <h4>El Líder Adaptativo: Liderazgo Situacional® de Hersey-Blanchard</h4>
+            <p>Su premisa central es que no existe un único estilo de liderazgo óptimo; la eficacia depende de adaptar el estilo del líder al nivel de "madurez" o "desarrollo" del colaborador para una tarea específica. Los cuatro estilos son: Dirigir (E1), Persuadir (E2), Participar (E3) y Delegar (E4).</p>
+
+            <h4>El Visionario vs. El Gestor: Liderazgo Transformacional vs. Transaccional</h4>
+            <p><b>Liderazgo Transaccional:</b> Se basa en el orden y la supervisión. Funciona a través de un sistema de intercambio: recompensas y castigos para motivar el cumplimiento de objetivos. Es efectivo para metas a corto plazo.</p>
+            <p><b>Liderazgo Transformacional:</b> Se centra en inspirar y motivar a los seguidores para que superen sus propios intereses y se comprometan con una visión compartida. Fomenta la innovación y el desarrollo personal.</p>
+
+            <h4>El Líder Empoderador: Liderazgo de Servicio de Greenleaf</h4>
+            <p>Invierte la pirámide de poder tradicional. La filosofía central es que el líder es, ante todo, un sirviente. Su principal motivación es servir a los demás, y el liderazgo surge como la forma más efectiva de llevar a cabo ese servicio. La prueba definitiva es si las personas a las que se sirve crecen y se vuelven más autónomas.</p>
+            
+            <div class="quiz-container">
+                <h4>Autoevaluación: Sección 2</h4>
+                <div class="quiz-question" id="q2-1"><p>1. Según el Liderazgo Situacional®, ¿qué estilo se debe aplicar a un colaborador capaz pero inseguro o sin predisposición (M3)?</p><div class="quiz-options"><label><input type="radio" name="q2-1" value="a"> E1: Dirigir.</label><label><input type="radio" name="q2-1" value="b"> E3: Participar.</label><label><input type="radio" name="q2-1" value="c"> E4: Delegar.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q2-2"><p>2. ¿Cuál es la principal diferencia entre el liderazgo transaccional y el transformacional?</p><div class="quiz-options"><label><input type="radio" name="q2-2" value="a"> El transaccional se enfoca en la visión a largo plazo, mientras que el transformacional en tareas diarias.</label><label><input type="radio" name="q2-2" value="b"> El transaccional usa recompensas/castigos, mientras que el transformacional inspira con una visión compartida.</label><label><input type="radio" name="q2-2" value="c"> No hay diferencias significativas; son dos nombres para el mismo estilo.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q2-3"><p>3. La filosofía central del Liderazgo de Servicio es:</p><div class="quiz-options"><label><input type="radio" name="q2-3" value="a"> El líder debe acumular poder para servir mejor a la organización.</label><label><input type="radio" name="q2-3" value="b"> El líder es, ante todo, un sirviente cuyo objetivo es el crecimiento de los demás.</label><label><input type="radio" name="q2-3" value="c"> El servicio más importante de un líder es asegurar la máxima rentabilidad.</label></div><div class="quiz-feedback"></div></div>
+                <button class="verify-btn" data-section="section2">Verificar y Continuar</button>
+            </div>
+        </div>
+        
+        <div id="section3" class="content-section">
+            <h2>Parte II: El Arsenal Interno del Líder</h2>
+            <h3>Sección 3: La Primacía de la Inteligencia Emocional (IE)</h3>
+            <p>La investigación demuestra de manera concluyente que la IE es un predictor más potente del rendimiento sobresaliente en el liderazgo que el coeficiente intelectual (CI) o las habilidades técnicas. La capacidad de un líder para gestionar su mundo interior y navegar las complejidades de las relaciones interpersonales es lo que distingue a los líderes excepcionales.</p>
+
+            <h4>Desglosando el Marco de Daniel Goleman</h4>
+            <ul>
+                <li><b>Autoconciencia:</b> La piedra angular. Reconocer y comprender las propias emociones y su efecto en los demás.</li>
+                <li><b>Autogestión:</b> La capacidad de gestionar los estados internos e impulsos. Mantener la calma en crisis.</li>
+                <li><b>Conciencia Social (Empatía):</b> La capacidad de percibir y comprender las emociones y necesidades de los demás.</li>
+                <li><b>Gestión de Relaciones:</b> La habilidad para inducir respuestas deseables en los demás, como inspirar, influir y gestionar conflictos.</li>
+            </ul>
+
+            <div class="case-study">
+                <h4>Rincón del CEO: Satya Nadella (Microsoft)</h4>
+                <p>En su primer día como CEO, Nadella instó a que la empatía con los clientes fuera una habilidad clave, marcando un cambio cultural monumental. En una reunión con altos ejecutivos, estableció un estándar de alta autogestión al decir: "Nada de lloriqueos, en Microsoft solo habrá solucionadores... Si no aceptan la nueva visión, no se queden". Esta combinación de empatía y responsabilidad redefinió el liderazgo en Microsoft.</p>
+            </div>
+            
+            <div class="quiz-container">
+                <h4>Autoevaluación: Sección 3</h4>
+                <div class="quiz-question" id="q3-1"><p>1. ¿Cuál es la piedra angular de la Inteligencia Emocional según Daniel Goleman?</p><div class="quiz-options"><label><input type="radio" name="q3-1" value="a"> Gestión de Relaciones.</label><label><input type="radio" name="q3-1" value="b"> Autoconciencia.</label><label><input type="radio" name="q3-1" value="c"> Empatía.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q3-2"><p>2. Mantener la calma durante una crisis es un ejemplo de:</p><div class="quiz-options"><label><input type="radio" name="q3-2" value="a"> Autogestión.</label><label><input type="radio" name="q3-2" value="b"> Conciencia Social.</label><label><input type="radio" name="q3-2" value="c"> Autoconciencia.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q3-3"><p>3. El caso de Satya Nadella en Microsoft ilustra principalmente la importancia de:</p><div class="quiz-options"><label><input type="radio" name="q3-3" value="a"> La habilidad técnica sobre la IE.</label><label><input type="radio" name="q3-3" value="b"> La combinación de empatía y alta exigencia (autogestión).</label><label><input type="radio" name="q3-3" value="c"> Un enfoque de liderazgo puramente autocrático.</label></div><div class="quiz-feedback"></div></div>
+                <button class="verify-btn" data-section="section3">Verificar y Continuar</button>
+            </div>
+        </div>
+
+        <div id="section4" class="content-section">
+            <h3>Sección 4: El Arte y la Ciencia de la Alineación Estratégica</h3>
+            <p>Una visión brillante sin una ejecución impecable es simplemente una alucinación. La alineación estratégica es el proceso mediante el cual un líder se asegura de que cada miembro de la organización no solo comprenda la estrategia, sino que también esté motivado y capacitado para ejecutarla.</p>
+
+            <h4>La Brecha entre la Visión y la Ejecución</h4>
+            <p>Las estadísticas son alarmantes: un estudio de McKinsey reveló que el 70% de las iniciativas de cambio fracasan, principalmente por la resistencia de los empleados y la falta de apoyo de la dirección, ambos síntomas de desalineación. A menudo, la causa raíz es que solo una minoría de los empleados puede identificar correctamente la estrategia de su empresa.</p>
+
+            <h4>El Líder como Director de Alineación</h4>
+            <p>Para superar esta brecha, el líder debe asumir tres responsabilidades críticas:</p>
+            <ol>
+                <li><b>Articular una Visión Clara y Convincente:</b> Establecer el rumbo de forma simple y memorable.</li>
+                <li><b>Establecer Marcos de Objetivos Coherentes:</b> Traducir la visión en un sistema de objetivos (como los OKR) que conecte el trabajo diario con la estrategia general.</li>
+                <li><b>Eliminar Barreras:</b> Despejar el camino identificando y eliminando obstáculos que impiden la ejecución.</li>
+            </ol>
+            
+            <div class="quiz-container">
+                <h4>Autoevaluación: Sección 4</h4>
+                <div class="quiz-question" id="q4-1"><p>1. ¿Cuál es una de las principales causas del fracaso en la ejecución de la estrategia?</p><div class="quiz-options"><label><input type="radio" name="q4-1" value="a"> La falta de recursos financieros.</label><label><input type="radio" name="q4-1" value="b"> La falta de claridad y comunicación de la estrategia a los empleados.</label><label><input type="radio" name="q4-1" value="c"> La competencia excesiva en el mercado.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q4-2"><p>2. ¿Qué significa que un líder actúe como "Director de Alineación"?</p><div class="quiz-options"><label><input type="radio" name="q4-2" value="a"> Que debe controlar cada tarea de cada empleado.</label><label><input type="radio" name="q4-2" value="b"> Que debe enfocarse únicamente en la visión a largo plazo, ignorando la ejecución.</label><label><input type="radio" name="q4-2" value="c"> Que debe articular la visión, crear objetivos coherentes y eliminar barreras.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q4-3"><p>3. ¿Para qué sirve un marco de objetivos como los OKR (Objetivos y Resultados Clave)?</p><div class="quiz-options"><label><input type="radio" name="q4-3" value="a"> Para conectar el trabajo diario de los empleados con la estrategia general de la empresa.</label><label><input type="radio" name="q4-3" value="b"> Para evaluar el desempeño anual y determinar los bonos.</label><label><input type="radio" name="q4-3" value="c"> Para reemplazar la necesidad de una visión estratégica.</label></div><div class="quiz-feedback"></div></div>
+                <button class="verify-btn" data-section="section4">Verificar y Continuar</button>
+            </div>
+        </div>
+
+        <div id="section5" class="content-section">
+            <h2>Parte III: Navegando el Panorama del Liderazgo Contemporáneo</h2>
+            <h3>Sección 5: Liderazgo en la Era de la Inteligencia Artificial</h3>
+            <p>La inteligencia artificial (IA) no es simplemente una nueva herramienta; es una fuerza transformadora que está redefiniendo la naturaleza del trabajo, la estrategia y, fundamentalmente, el liderazgo. El mantra para los líderes del futuro es inequívoco: "Los líderes que utilizan la IA reemplazarán a los que no lo hacen".</p>
+
+            <h4>Los Cinco Pilares del Liderazgo en la Era de la IA</h4>
+            <p>Un informe de <i>Harvard Deusto</i> describe cinco pilares esenciales:</p>
+            <ol>
+                <li><b>Visión Global Centrada en las Personas:</b> Combinar datos con empatía.</li>
+                <li><b>Potenciación de Competencias:</b> A medida que la IA asume tareas repetitivas, las habilidades humanas (comunicación, pensamiento crítico) ganan protagonismo.</li>
+                <li><b>Decisiones Basadas en Datos y Pensamiento Crítico:</b> Usar la IA para análisis, pero aplicar el juicio humano para la interpretación.</li>
+                <li><b>Integración del Bienestar y la Salud Mental:</b> Crear entornos que favorezcan el equilibrio emocional ante las presiones de la automatización.</li>
+                <li><b>Cumplimiento Normativo y Gobernanza Ética:</b> Garantizar el uso ético y transparente de la IA.</li>
+            </ol>
+            
+            <div class="quiz-container">
+                <h4>Autoevaluación: Sección 5</h4>
+                <div class="quiz-question" id="q5-1"><p>1. ¿Cuál es el nuevo mandato para los líderes en la era de la IA?</p><div class="quiz-options"><label><input type="radio" name="q5-1" value="a"> Reemplazar a los humanos con IA siempre que sea posible.</label><label><input type="radio" name="q5-1" value="b"> Ignorar la IA y centrarse solo en las habilidades humanas.</label><label><input type="radio" name="q5-1" value="c"> Potenciar el uso de la IA para aumentar la capacidad humana y mejorar la gestión.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q5-2"><p>2. A medida que la IA automatiza tareas, ¿qué tipo de habilidades se vuelven más cruciales para los líderes?</p><div class="quiz-options"><label><input type="radio" name="q5-2" value="a"> Habilidades de programación y análisis de datos.</label><label><input type="radio" name="q5-2" value="b"> Habilidades intrínsecamente humanas como la empatía, el pensamiento crítico y el coaching.</label><label><input type="radio" name="q5-2" value="c"> Habilidades de microgestión para supervisar los algoritmos.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q5-3"><p>3. ¿Qué implica el pilar de "Gobernanza Ética" en el liderazgo con IA?</p><div class="quiz-options"><label><input type="radio" name="q5-3" value="a"> Usar la IA para vigilar a los empleados.</label><label><input type="radio" name="q5-3" value="b"> Garantizar la transparencia, la protección de la privacidad y el uso ético de la IA.</label><label><input type="radio" name="q5-3" value="c"> Maximizar los beneficios a toda costa, utilizando la IA para encontrar lagunas normativas.</label></div><div class="quiz-feedback"></div></div>
+                <button class="verify-btn" data-section="section5">Verificar y Continuar</button>
+            </div>
+        </div>
+
+        <div id="section6" class="content-section">
+             <h3>Sección 6: El Líder Sostenible: Integrando los Principios ESG</h3>
+             <p>La sostenibilidad ha dejado de ser un tema periférico para convertirse en el núcleo de la estrategia empresarial moderna. Los criterios Ambientales, Sociales y de Gobernanza (ESG) son ahora el "nuevo estándar operativo".</p>
+
+            <h4>Un Marco para la Acción: Los Diez Principios del Pacto Mundial de la ONU</h4>
+            <p>Este pacto guía a las empresas para que alineen sus estrategias con diez principios en cuatro áreas fundamentales: Derechos Humanos, Normas Laborales, Medio Ambiente y Lucha contra la Corrupción.</p>
+
+            <div class="case-study">
+                <h4>Caso de Estudio: Patagonia</h4>
+                <p>Fundada por Yvon Chouinard, Patagonia es el arquetipo de una empresa impulsada por una misión. Su lema, "Estamos en el negocio para salvar nuestro planeta", se manifiesta en acciones concretas como la iniciativa "1% para el Planeta", el uso de materiales reciclados y la transferencia de la propiedad de la empresa a un fideicomiso dedicado a combatir la crisis climática. Patagonia ha demostrado que hacer lo correcto para el planeta puede ser altamente rentable.</p>
+            </div>
+            
+            <div class="quiz-container">
+                <h4>Autoevaluación: Sección 6</h4>
+                <div class="quiz-question" id="q6-1"><p>1. ¿Qué significan las siglas ESG?</p><div class="quiz-options"><label><input type="radio" name="q6-1" value="a"> Estrategia, Sostenibilidad y Ganancias.</label><label><input type="radio" name="q6-1" value="b"> Ambiental, Social y de Gobernanza.</label><label><input type="radio" name="q6-1" value="c"> Eficiencia, Sinergia y Globalización.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q6-2"><p>2. El Pacto Mundial de la ONU proporciona un marco basado en principios sobre:</p><div class="quiz-options"><label><input type="radio" name="q6-2" value="a"> Únicamente regulaciones ambientales.</label><label><input type="radio" name="q6-2" value="b"> Derechos Humanos, Normas Laborales, Medio Ambiente y Lucha contra la Corrupción.</label><label><input type="radio" name="q6-2" value="c"> Estrategias de marketing y ventas globales.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q6-3"><p>3. ¿Qué demuestra el caso de Patagonia en relación con la sostenibilidad?</p><div class="quiz-options"><label><input type="radio" name="q6-3" value="a"> Que la sostenibilidad es un costo que reduce la rentabilidad.</label><label><input type="radio" name="q6-3" value="b"> Que la responsabilidad ambiental y el éxito empresarial pueden ir de la mano.</label><label><input type="radio" name="q6-3" value="c"> Que las iniciativas de sostenibilidad solo son posibles para empresas pequeñas.</label></div><div class="quiz-feedback"></div></div>
+                <button class="verify-btn" data-section="section6">Verificar y Continuar</button>
+            </div>
+        </div>
+
+        <div id="section7" class="content-section">
+            <h3>Sección 7: El Líder Inclusivo: Desatando el Poder de la Diversidad</h3>
+            <p>La mera presencia de diversidad no garantiza el éxito. El verdadero catalizador del rendimiento es la inclusión: el arte de liderar de una manera que valore la diversidad, promueva la equidad y garantice que todos los empleados se sientan pertenecientes y empoderados.</p>
+
+            <h4>El Argumento Empresarial a Favor de la Inclusión</h4>
+            <p>La evidencia es abrumadora: la inclusión es un potente motor de rendimiento. Empresas con mayor diversidad en sus equipos ejecutivos superan a sus pares en rentabilidad hasta en un 36%. Los equipos inclusivos son más innovadores y toman mejores decisiones.</p>
+
+            <h4>Marcos para el Liderazgo Inclusivo</h4>
+            <p>El influyente marco de Deloitte identifica seis rasgos de los líderes inclusivos:</p>
+            <ul>
+                <li><b>Compromiso:</b> Se comprometen personalmente con la diversidad.</li>
+                <li><b>Coraje:</b> Desafían el statu quo y son humildes.</li>
+                <li><b>Conciencia de los Sesgos:</b> Son conscientes de los sesgos y trabajan para garantizar la meritocracia.</li>
+                <li><b>Curiosidad:</b> Tienen una mentalidad abierta y escuchan sin juzgar.</li>
+                <li><b>Inteligencia Cultural:</b> Son conscientes de las culturas de los demás.</li>
+                <li><b>Colaboración:</b> Empoderan a las personas y crean cohesión.</li>
+            </ul>
+            
+            <div class="quiz-container">
+                <h4>Autoevaluación: Sección 7</h4>
+                <div class="quiz-question" id="q7-1"><p>1. ¿Cuál es la diferencia fundamental entre diversidad e inclusión?</p><div class="quiz-options"><label><input type="radio" name="q7-1" value="a"> No hay diferencia, son términos intercambiables.</label><label><input type="radio" name="q7-1" value="b"> La diversidad es tener una mezcla de personas, la inclusión es hacer que esa mezcla funcione bien junta.</label><label><input type="radio" name="q7-1" value="c"> La diversidad se refiere al género, mientras que la inclusión se refiere a la etnia.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q7-2"><p>2. Según estudios de McKinsey, las empresas con mayor diversidad en sus equipos ejecutivos son:</p><div class="quiz-options"><label><input type="radio" name="q7-2" value="a"> Menos rentables pero más innovadoras.</label><label><input type="radio" name="q7-2" value="b"> Igualmente rentables que sus competidores menos diversos.</label><label><input type="radio" name="q7-2" value="c"> Significativamente más propensas a superar a sus pares en rentabilidad.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q7-3"><p>3. ¿Cuál de los siguientes NO es uno de los seis rasgos del líder inclusivo según Deloitte?</p><div class="quiz-options"><label><input type="radio" name="q7-3" value="a"> Coraje.</label><label><input type="radio" name="q7-3" value="b"> Curiosidad.</label><label><input type="radio" name="q7-3" value="c"> Autoridad.</label></div><div class="quiz-feedback"></div></div>
+                <button class="verify-btn" data-section="section7">Verificar y Continuar</button>
+            </div>
+        </div>
+
+        <div id="section8" class="content-section">
+            <h2>Parte IV: Liderazgo en Acción</h2>
+            <h3>Sección 8: Un Enfoque en el Contexto Peruano</h3>
+            <p>El liderazgo no se ejerce en el vacío. Las expectativas culturales y los desafíos socioeconómicos de una nación moldean lo que se considera un liderazgo efectivo. En Perú, ciertos rasgos son particularmente valorados.</p>
+
+            <h4>El Perfil Deseado de un Líder Peruano</h4>
+            <p>El estudio "Destape Regional 2024" de Consumer Truth revela los rasgos más buscados:</p>
+            <ul>
+                <li><b>Humildad:</b> Es la característica más valorada. Se buscan líderes que conozcan sus orígenes y estén dispuestos a "caminar de la mano con el pueblo".</li>
+                <li><b>Carisma:</b> Entendido como una profunda capacidad de empatía.</li>
+                <li><b>Orgullo:</b> Líderes que valoran y ponen en primer lugar a su región.</li>
+                <li><b>Luchador:</b> Figuras perseverantes que han surgido "desde abajo" con su propio esfuerzo.</li>
+            </ul>
+
+            <div class="case-study">
+                <h4>Caso de Estudio: Carlos Rodríguez-Pastor (Intercorp)</h4>
+                <p>Consistentemente clasificado como el empresario más poderoso del sector privado en Perú, su liderazgo está anclado en la visión de servir a la clase media emergente. Sus valores clave son la transparencia, el espíritu de superación, el trabajo en equipo y la humildad, alineándose directamente con la característica más valorada por los peruanos. Fomenta una cultura de innovación y tolerancia al error.</p>
+            </div>
+            
+            <div class="quiz-container">
+                <h4>Autoevaluación: Sección 8</h4>
+                <div class="quiz-question" id="q8-1"><p>1. ¿Cuál es la característica más valorada en un líder empresarial en Perú, según el estudio "Destape Regional 2024"?</p><div class="quiz-options"><label><input type="radio" name="q8-1" value="a"> Autoridad.</label><label><input type="radio" name="q8-1" value="b"> Humildad.</label><label><input type="radio" name="q8-1" value="c"> Riqueza.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q8-2"><p>2. El estilo de liderazgo de Carlos Rodríguez-Pastor (Intercorp) se caracteriza por:</p><div class="quiz-options"><label><input type="radio" name="q8-2" value="a"> Un enfoque en el lujo y los mercados de élite.</label><label><input type="radio" name="q8-2" value="b"> Una cultura de aversión al riesgo y mantenimiento del statu quo.</label><label><input type="radio" name="q8-2" value="c"> Una visión enfocada en la clase media emergente y una cultura que tolera el error para innovar.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q8-3"><p>3. ¿Qué demanda la sociedad peruana de sus líderes empresariales?</p><div class="quiz-options"><label><input type="radio" name="q8-3" value="a"> "Menos discurso y más apuesta", es decir, acciones concretas.</label><label><input type="radio" name="q8-3" value="b"> Más presencia en redes sociales y menos en la comunidad.</label><label><input type="radio" name="q8-3" value="c"> Un enfoque exclusivo en la rentabilidad de la empresa.</label></div><div class="quiz-feedback"></div></div>
+                <button class="verify-btn" data-section="section8">Verificar y Continuar</button>
+            </div>
+        </div>
+
+        <div id="section9" class="content-section">
+            <h3>Sección 9: Historias Inspiradoras y Cuentos con Moraleja</h3>
+            <p>Las historias son una de las herramientas más poderosas para la enseñanza del liderazgo. Anclan los conceptos abstractos en narrativas memorables y emocionalmente resonantes.</p>
+
+            <h4>Perfiles de Liderazgo con Propósito</h4>
+            <p><b>Nelson Mandela:</b> Su liderazgo tras el fin del apartheid es una lección sobre la reconciliación. En lugar de buscar la venganza, promovió el diálogo y el perdón, demostrando que la verdadera fuerza reside en la capacidad de unificar.</p>
+
+            <h4>La Visión del Innovador</h4>
+            <p><b>Ed Catmull (Pixar):</b> En su libro <i>Creatividad, S.A.</i>, narra cómo construyó una cultura de creatividad sostenible. Su liderazgo se centró en crear un entorno de seguridad psicológica donde la retroalimentación honesta (el "Braintrust") y el aprendizaje del fracaso eran pilares fundamentales.</p>
+
+            <div class="case-study">
+                <h4>Anécdota: El Ejecutivo de IBM</h4>
+                <p>Cuando un ejecutivo cometió un error que le costó a IBM $600,000, el presidente Tom Watson lo llamó a su oficina. El ejecutivo esperaba ser despedido. En cambio, Watson le dijo: "¡¿Despedirlo?! De ninguna manera. Acabo de invertir 600,000 dólares en su educación". Esta respuesta transformó un costoso error en una valiosa lección, fomentando una cultura donde la gente no teme tomar riesgos.</p>
+            </div>
+            
+            <div class="quiz-container">
+                <h4>Autoevaluación: Sección 9</h4>
+                <div class="quiz-question" id="q9-1"><p>1. ¿Qué principio clave de liderazgo ilustra la historia de Nelson Mandela?</p><div class="quiz-options"><label><input type="radio" name="q9-1" value="a"> La importancia de la innovación tecnológica.</label><label><input type="radio" name="q9-1" value="b"> El poder de la reconciliación y la unidad sobre la venganza.</label><label><input type="radio" name="q9-1" value="c"> La necesidad de un control autoritario en tiempos de crisis.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q9-2"><p>2. La cultura de Pixar, bajo el liderazgo de Ed Catmull, se basaba en:</p><div class="quiz-options"><label><input type="radio" name="q9-2" value="a"> Una estricta jerarquía y procesos rígidos.</label><label><input type="radio" name="q9-2" value="b"> Competencia interna feroz entre los creativos.</label><label><input type="radio" name="q9-2" value="c"> Seguridad psicológica, retroalimentación honesta y aprendizaje del fracaso.</label></div><div class="quiz-feedback"></div></div>
+                <div class="quiz-question" id="q9-3"><p>3. La anécdota del ejecutivo de IBM y Tom Watson enseña que:</p><div class="quiz-options"><label><input type="radio" name="q9-3" value="a"> Los errores deben ser castigados severamente para evitar que se repitan.</label><label><input type="radio" name="q9-3" value="b"> Los errores pueden ser vistos como oportunidades de aprendizaje costosas pero valiosas.</label><label><input type="radio" name="q9-3" value="c"> Los ejecutivos de alto nivel son inmunes a ser despedidos.</label></div><div class="quiz-feedback"></div></div>
+                <button class="verify-btn" data-section="section9">Verificar y Continuar</button>
+            </div>
+        </div>
+
+        <div id="final-quiz" class="content-section">
+            <h2>Cuestionario Final del Curso</h2>
+            <p>Es hora de poner a prueba tus conocimientos. Responde las siguientes 20 preguntas para evaluar tu comprensión de los conceptos clave del liderazgo moderno. ¡Mucha suerte!</p>
+            
+            <div id="final-quiz-container">
+                <div id="final-quiz-progress-container">
+                    <div id="final-quiz-progress-bar"></div>
+                </div>
+                <div id="question-container">
+                    <!-- Las preguntas se cargarán aquí con JS -->
+                </div>
+                <button id="next-btn">Siguiente</button>
+            </div>
+
+            <div id="results-container">
+                <h3>Resultados del Cuestionario</h3>
+                <p>Has completado la evaluación. Aquí está tu puntuación y un resumen de tus respuestas.</p>
+                <h2 id="score"></h2>
+                <div id="results-summary">
+                    <!-- El resumen de resultados se cargará aquí con JS -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- CONFIGURACIÓN INICIAL ---
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.content-section');
+            const progressBar = document.getElementById('progress-bar');
+            const totalContentSections = Array.from(sections).filter(s => s.id !== 'final-quiz').length;
+            
+            // Objeto para rastrear el estado de finalización de las autoevaluaciones
+            const sectionCompletion = {};
+            navLinks.forEach(link => {
+                const sectionId = link.dataset.sectionId;
+                if (sectionId) {
+                    sectionCompletion[sectionId] = false;
+                }
+            });
+            sectionCompletion['section1'] = true; // La primera siempre está "desbloqueada" para empezar
+
+            // --- NAVEGACIÓN Y BARRA DE PROGRESO GENERAL ---
+            function updateActiveLink(targetId) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.sectionId === targetId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            function updateProgressBar() {
+                const completedCount = Object.values(sectionCompletion).filter(isCompleted => isCompleted).length;
+                // Restamos 1 porque el cuestionario final no cuenta para la barra de progreso principal
+                const progress = ( (completedCount -1) / totalContentSections) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+
+            function showSection(targetId) {
+                sections.forEach(section => {
+                    section.classList.toggle('active', section.id === targetId);
+                });
+                updateActiveLink(targetId);
+                updateProgressBar();
+                
+                if (targetId === 'final-quiz') {
+                    loadFinalQuestion();
+                }
+            }
+            
+            // --- LÓGICA DE BLOQUEO/DESBLOQUEO DE MÓDULOS ---
+            function lockUnlockNav() {
+                const allLinks = Array.from(navLinks);
+                for (let i = 0; i < allLinks.length; i++) {
+                    const link = allLinks[i];
+                    const sectionId = link.dataset.sectionId;
+                    
+                    if (i === 0) {
+                        link.classList.remove('locked');
+                        continue;
+                    }
+
+                    const prevLink = allLinks[i - 1];
+                    const prevSectionId = prevLink ? prevLink.dataset.sectionId : null;
+
+                    if (prevSectionId && sectionCompletion[prevSectionId]) {
+                        link.classList.remove('locked');
+                    } else {
+                        link.classList.add('locked');
+                    }
+                }
+                 updateProgressBar();
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (this.classList.contains('locked')) {
+                        return;
+                    }
+                    const targetId = this.dataset.sectionId;
+                    showSection(targetId);
+                    window.scrollTo(0, 0);
+                });
+            });
+
+            // --- LÓGICA DE AUTOEVALUACIONES ---
+            const miniQuizAnswers = {
+                'q1-1': 'b', 'q1-2': 'c', 'q1-3': 'b', 'q2-1': 'b', 'q2-2': 'b', 'q2-3': 'b',
+                'q3-1': 'b', 'q3-2': 'a', 'q3-3': 'b', 'q4-1': 'b', 'q4-2': 'c', 'q4-3': 'a',
+                'q5-1': 'c', 'q5-2': 'b', 'q5-3': 'b', 'q6-1': 'b', 'q6-2': 'b', 'q6-3': 'b',
+                'q7-1': 'b', 'q7-2': 'c', 'q7-3': 'c', 'q8-1': 'b', 'q8-2': 'c', 'q8-3': 'a',
+                'q9-1': 'b', 'q9-2': 'c', 'q9-3': 'b'
+            };
+
+            document.querySelectorAll('.verify-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const sectionId = this.dataset.section;
+                    const questions = document.querySelectorAll(`#${sectionId} .quiz-question`);
+                    let allCorrect = true;
+                    
+                    questions.forEach(q => {
+                        const questionId = q.id;
+                        const feedbackEl = q.querySelector('.quiz-feedback');
+                        const selectedRadio = q.querySelector(`input[name="${questionId}"]:checked`);
+                        
+                        if (!selectedRadio) {
+                            allCorrect = false;
+                            feedbackEl.textContent = 'Debes seleccionar una respuesta.';
+                            feedbackEl.className = 'quiz-feedback incorrect';
+                            return;
+                        }
+
+                        if (selectedRadio.value === miniQuizAnswers[questionId]) {
+                            feedbackEl.textContent = '¡Correcto!';
+                            feedbackEl.className = 'quiz-feedback correct';
+                        } else {
+                            allCorrect = false;
+                            feedbackEl.textContent = 'Incorrecto. Inténtalo de nuevo.';
+                            feedbackEl.className = 'quiz-feedback incorrect';
+                        }
+                    });
+
+                    if (allCorrect) {
+                        const allLinks = Array.from(navLinks);
+                        const currentIndex = allLinks.findIndex(link => link.dataset.sectionId === sectionId);
+                        if (currentIndex > -1 && currentIndex < allLinks.length - 1) {
+                            const nextLink = allLinks[currentIndex + 1];
+                            sectionCompletion[nextLink.dataset.sectionId] = true;
+                            lockUnlockNav();
+                            setTimeout(() => {
+                                showSection(nextLink.dataset.sectionId);
+                                window.scrollTo(0, 0);
+                            }, 1000);
+                        }
+                    }
+                });
+            });
+
+            // --- LÓGICA DEL CUESTIONARIO FINAL ---
+            const finalQuizQuestions = [
+                { type: 'mc', question: 'La "Tríada del Liderazgo" se compone de:', options: ['Líder-Seguidor-Contexto', 'Visión-Misión-Valores', 'Líder-Tarea-Resultado'], answer: 'Líder-Seguidor-Contexto', explanation: 'El liderazgo moderno es una interacción dinámica entre el líder, los seguidores y la situación o contexto en el que operan.' },
+                { type: 'mc', question: '¿Qué modelo de liderazgo se enfoca en adaptar el estilo al nivel de madurez del colaborador?', options: ['Transaccional', 'Situacional', 'De Servicio', 'Transformacional'], answer: 'Situacional', explanation: 'El Liderazgo Situacional de Hersey-Blanchard se basa en adaptar el estilo del líder (dirigir, persuadir, participar, delegar) al nivel de desarrollo del colaborador.' },
+                { type: 'mc', question: 'La capacidad de un líder para comprender y gestionar sus propias emociones y las de los demás se conoce como:', options: ['Inteligencia Emocional (IE)', 'Coeficiente Intelectual (CI)', 'Habilidades Técnicas', 'Experiencia Previa'], answer: 'Inteligencia Emocional (IE)', explanation: 'La Inteligencia Emocional (IE), popularizada por Daniel Goleman, es la competencia clave para la autoconciencia, autogestión, conciencia social y gestión de relaciones.' },
+                { type: 'mc', question: '¿Cuál de los siguientes es un pilar del liderazgo en la era de la IA?', options: ['Decisiones basadas en datos y pensamiento crítico', 'Reemplazar humanos con IA', 'Ignorar la IA', 'Microgestionar algoritmos'], answer: 'Decisiones basadas en datos y pensamiento crítico', explanation: 'Los líderes deben usar la IA para el análisis de datos, pero complementarlo con el juicio y el pensamiento crítico humano para tomar decisiones estratégicas.' },
+                { type: 'mc', question: 'Los criterios ESG se refieren a aspectos:', options: ['Ambientales, Sociales y de Gobernanza', 'Estrategia, Sostenibilidad y Ganancias', 'Eficiencia, Sinergia y Globalización', 'Economía, Sociedad y Gobierno'], answer: 'Ambientales, Sociales y de Gobernanza', explanation: 'ESG significa Environmental, Social, and Governance (Ambiental, Social y de Gobernanza) y es el estándar moderno para la sostenibilidad corporativa.' },
+                { type: 'mc', question: '¿Qué es la "seguridad psicológica" en un equipo, identificada por el Proyecto Aristóteles de Google?', options: ['Un entorno donde los miembros se sienten seguros para tomar riesgos y ser vulnerables', 'Un lugar donde no se cometen errores', 'Un equipo donde solo habla el líder', 'Un espacio de competencia interna'], answer: 'Un entorno donde los miembros se sienten seguros para tomar riesgos y ser vulnerables', explanation: 'La seguridad psicológica es el factor más importante de los equipos de alto rendimiento, permitiendo la innovación y la colaboración sin miedo al castigo por errores.' },
+                { type: 'mc', question: 'Según el estudio "Destape Regional 2024", la característica más valorada en un líder en Perú es:', options: ['La autoridad', 'La riqueza', 'La humildad', 'La fama'], answer: 'La humildad', explanation: 'La humildad, entendida como cercanía y conocimiento de los propios orígenes, es el rasgo más apreciado en el liderazgo empresarial peruano.' },
+                { type: 'mc', question: 'El liderazgo que se basa en un sistema de recompensas y castigos para lograr objetivos a corto plazo es el:', options: ['Liderazgo Transaccional', 'Liderazgo Transformacional', 'Liderazgo Situacional', 'Liderazgo de Servicio'], answer: 'Liderazgo Transaccional', explanation: 'El liderazgo transaccional opera como un intercambio: el líder establece metas y utiliza recompensas y castigos para motivar su cumplimiento.' },
+                { type: 'mc', question: '¿Qué empresa es un caso de estudio emblemático de liderazgo sostenible por su misión de "salvar nuestro planeta"?', options: ['Microsoft', 'Unilever', 'Patagonia', 'Intercorp'], answer: 'Patagonia', explanation: 'Patagonia, fundada por Yvon Chouinard, ha integrado la responsabilidad ambiental en su ADN desde sus inicios, demostrando que la sostenibilidad puede ser rentable.' },
+                { type: 'mc', question: 'El marco de Deloitte sobre liderazgo inclusivo incluye el rasgo de "Coraje", que significa:', options: ['Hablar y desafiar el statu quo, y ser humilde sobre las propias limitaciones', 'Mantener siempre el control', 'Evitar conflictos a toda costa', 'Seguir las órdenes sin cuestionar'], answer: 'Hablar y desafiar el statu quo, y ser humilde sobre las propias limitaciones', explanation: 'El coraje en el liderazgo inclusivo implica la valentía de cuestionar las normas existentes y la humildad para reconocer que no se tienen todas las respuestas.' },
+                { type: 'tf', question: 'El liderazgo moderno se enfoca exclusivamente en los rasgos innatos de una persona.', answer: false, explanation: 'Falso. El liderazgo moderno se ve como un proceso dinámico y relacional (líder-seguidor-contexto), no solo como un conjunto de rasgos innatos.' },
+                { type: 'tf', question: 'El Liderazgo de Servicio invierte la pirámide de poder tradicional, poniendo al líder al servicio del equipo.', answer: true, explanation: 'Verdadero. La filosofía del Liderazgo de Servicio es "servir primero", donde el líder se enfoca en el crecimiento y bienestar de su equipo.' },
+                { type: 'tf', question: 'La Inteligencia Emocional es menos importante que el Coeficiente Intelectual para el éxito en el liderazgo.', answer: false, explanation: 'Falso. La investigación muestra que la Inteligencia Emocional es un predictor más potente del rendimiento sobresaliente en el liderazgo que el CI.' },
+                { type: 'tf', question: 'La "brecha de ejecución" se refiere a la diferencia entre la estrategia planificada y lo que realmente se implementa.', answer: true, explanation: 'Verdadero. Esta brecha es un desafío común en las organizaciones y a menudo se debe a una mala alineación y comunicación.' },
+                { type: 'tf', question: 'En la era de la IA, las habilidades humanas como la empatía y la comunicación pierden relevancia.', answer: false, explanation: 'Falso. A medida que la IA automatiza tareas, las habilidades intrínsecamente humanas se vuelven aún más cruciales y diferenciadoras para los líderes.' },
+                { type: 'tf', question: 'Los criterios ESG son obligatorios por ley en todos los países del mundo.', answer: false, explanation: 'Falso. Aunque hay una creciente presión regulatoria (como en la UE), los marcos ESG son en gran medida voluntarios, pero se han convertido en un estándar operativo esperado por inversores y consumidores.' },
+                { type: 'tf', question: 'La diversidad por sí sola garantiza un mayor rendimiento y una mejor toma de decisiones.', answer: false, explanation: 'Falso. La diversidad es necesaria, pero sin una cultura de inclusión que valore y escuche esas diversas perspectivas, no se obtienen sus beneficios.' },
+                { type: 'tf', question: 'El liderazgo de Carlos Rodríguez-Pastor en Intercorp se enfoca en valores como la humildad y la tolerancia al error.', answer: true, explanation: 'Verdadero. Su estilo de liderazgo resuena con los valores culturales peruanos y promueve una cultura de innovación a través de la experimentación.' },
+                { type: 'tf', question: 'El Liderazgo Transformacional se enfoca en mantener el statu quo y la eficiencia de los procesos existentes.', answer: false, explanation: 'Falso. Ese es el enfoque del Liderazgo Transaccional. El Liderazgo Transformacional se centra en inspirar el cambio y la innovación.' },
+                { type: 'tf', question: 'La seguridad psicológica es un entorno donde no se cometen errores.', answer: false, explanation: 'Falso. La seguridad psicológica es un entorno donde los miembros del equipo se sienten seguros para cometer errores y aprender de ellos sin temor a ser castigados.' }
+            ];
+
+            let currentQuestionIndex = 0;
+            const userAnswers = [];
+            const questionContainer = document.getElementById('question-container');
+            const nextBtn = document.getElementById('next-btn');
+            const resultsContainer = document.getElementById('results-container');
+            const finalQuizContainer = document.getElementById('final-quiz-container');
+            const finalQuizProgressBar = document.getElementById('final-quiz-progress-bar');
+
+            function updateFinalQuizProgress() {
+                const progress = (currentQuestionIndex / finalQuizQuestions.length) * 100;
+                finalQuizProgressBar.style.width = `${progress}%`;
+            }
+
+            function loadFinalQuestion() {
+                if (currentQuestionIndex >= finalQuizQuestions.length) return;
+                updateFinalQuizProgress();
+
+                const questionData = finalQuizQuestions[currentQuestionIndex];
+                let optionsHTML = '';
+                if (questionData.type === 'mc') {
+                    questionData.options.forEach(option => {
+                        optionsHTML += `<label><input type="radio" name="final-q" value="${option}"> ${option}</label>`;
+                    });
+                } else { // tf
+                    optionsHTML = `
+                        <label><input type="radio" name="final-q" value="true"> Verdadero</label>
+                        <label><input type="radio" name="final-q" value="false"> Falso</label>
+                    `;
+                }
+
+                questionContainer.innerHTML = `
+                    <h4>Pregunta ${currentQuestionIndex + 1} de ${finalQuizQuestions.length}</h4>
+                    <p>${questionData.question}</p>
+                    <div class="quiz-options">${optionsHTML}</div>
+                `;
+
+                if (currentQuestionIndex === finalQuizQuestions.length - 1) {
+                    nextBtn.textContent = 'Finalizar y Ver Resultados';
+                }
+            }
+
+            function showResults() {
+                finalQuizContainer.style.display = 'none';
+                resultsContainer.style.display = 'block';
+                window.scrollTo(0, 0);
+
+                let score = 0;
+                let resultsHTML = '';
+
+                finalQuizQuestions.forEach((q, index) => {
+                    const userAnswer = userAnswers[index];
+                    const correctAnswer = q.type === 'tf' ? String(q.answer) : q.answer;
+                    const isCorrect = userAnswer === correctAnswer;
+
+                    if (isCorrect) {
+                        score++;
+                    }
+                    
+                    let userAnswerText = userAnswer ? (userAnswer === 'true' ? 'Verdadero' : (userAnswer === 'false' ? 'Falso' : userAnswer)) : 'No respondida';
+                    let correctAnswerText = correctAnswer === 'true' ? 'Verdadero' : (correctAnswer === 'false' ? 'Falso' : correctAnswer);
+
+                    resultsHTML += `
+                        <div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">
+                            <p><b>Pregunta ${index + 1}:</b> ${q.question}</p>
+                            <p><b>Tu respuesta:</b> ${userAnswerText}</p>
+                            <p><b>Respuesta correcta:</b> ${correctAnswerText}</p>
+                            <div class="explanation"><b>Fundamento:</b> ${q.explanation}</div>
+                        </div>
+                    `;
+                });
+
+                document.getElementById('score').textContent = `Tu puntuación: ${score} de ${finalQuizQuestions.length}`;
+                document.getElementById('results-summary').innerHTML = resultsHTML;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                const selectedOption = document.querySelector('input[name="final-q"]:checked');
+                userAnswers.push(selectedOption ? selectedOption.value : null);
+
+                currentQuestionIndex++;
+                if (currentQuestionIndex < finalQuizQuestions.length) {
+                    loadFinalQuestion();
+                } else {
+                    updateFinalQuizProgress();
+                    setTimeout(showResults, 400);
+                }
+            });
+
+            // --- INICIALIZACIÓN DEL CURSO ---
+            lockUnlockNav();
+            showSection('section1');
+        });
+    </script>
+</body>
+</html>
